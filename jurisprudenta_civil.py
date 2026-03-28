@@ -4,26 +4,21 @@ from docx import Document
 from docx.shared import Pt
 import io
 
-# Configurare aplicație GeorgeAOH
+# Configurare GeorgeAOH
 st.set_page_config(page_title="Expert Jurisprudență Proprietate", page_icon="⚖️", layout="wide")
 
 # Stil vizual
-st.markdown("""
-    <style>
-    .stCheckbox { background-color: #f0f2f6; padding: 15px; border-radius: 10px; border: 2px solid #1976d2; }
-    .stTextArea { margin-top: 10px; }
-    </style>
-    """, unsafe_allow_html=True)
+st.markdown("""<style>.stCheckbox { background-color: #f0f2f6; padding: 10px; border-radius: 10px; border: 2px solid #1976d2; }</style>""", unsafe_allow_html=True)
 
-# --- BAZA DE DATE ACTUALIZATĂ (7 SITUAȚII) ---
+# --- BAZA DE DATE ACTUALIZATĂ (8 SITUAȚII) ---
 if 'data' not in st.session_state:
     st.session_state.data = [
         {
             "id": "RECT-907", 
             "sit": "1. RECTIFICAREA ÎNTABULĂRII (ART. 907 C. CIV.) ÎN BAZA S. 832/2000", 
-            "leg": "Art. 907-908 C. Civ. / Art. 430 C.pc. / Art. 287 C. Penal", 
+            "leg": "Art. 907-908 C. Civ. / Art. 430 C.pc.", 
             "iccj": "S. 832/2000 IREVOCABILĂ", 
-            "arg": "Cererea de rectificare se bazează pe Sentința 832/2000 (Revendicare), fundamentată pe Planul Parcelar și PV de punere în posesie. Expertul nu poate menține o suprapunere nelegală fără a încălca autoritatea de lucru judecat.",
+            "arg": "Cererea de rectificare se bazează pe Sentința 832/2000 (Revendicare), care obligă la rectificarea situației de fapt conform actelor de posesie validate.",
             "q": "Să precizeze expertul cum justifică menținerea unei suprapuneri în fața unei sentințe de revendicare irevocabile?"
         },
         {
@@ -31,53 +26,62 @@ if 'data' not in st.session_state:
             "sit": "2. PRIORITATEA REVENDICĂRII FAȚĂ DE GRĂNIȚUIRE (COMBATERE AVOCAT)", 
             "leg": "Art. 560-561 C. Civ. vs. Art. 563 C. Civ.", 
             "iccj": "Jurisprudență Constantă ÎCCJ", 
-            "arg": "Contrar susținerilor părții adverse, grănițuirea NU are întâietate față de revendicare. Grănițuirea doar delimitează hotarul, pe când revendicarea (S. 832/2000) a stabilit însuși DREPTUL de proprietate. O grănițuire ulterioară nu poate anula un titlu confirmat irevocabil.",
-            "q": "Cum poate expertul să valideze o grănițuire care încalcă o sentință de revendicare irevocabilă, ignorând faptul că revendicarea tranșează fondul dreptului?"
+            "arg": "Revendicarea (S. 832/2000) a stabilit dreptul de proprietate. Grănițuirea doar delimitează hotarul și nu poate anula un titlu confirmat irevocabil.",
+            "q": "Cum poate expertul să valideze o grănițuire care încalcă o sentință de revendicare irevocabilă?"
         },
         {
             "id": "OBJ-1", 
             "sit": "3. NERESPECTAREA MANDATULUI INSTANȚEI (OBIECTIVUL NR. 1)", 
             "leg": "Art. 330 C.pc. / Art. 187 C.pc.", 
-            "iccj": "Decizia 66/2020 ICCJ (Plan Parcelar)", 
-            "arg": "Instanța a dispus repoziționarea conform Planului Parcelar validat (Obiectivul nr. 1). Refuzul expertului de a transpune tehnic acest document constituie o sfidare a mandatului judiciar.",
-            "q": "De ce expertul nu a prezentat varianta tehnică ce transpune riguros Planul Parcelar pe teren, așa cum s-a dispus prin Obiectivul nr. 1?"
+            "iccj": "Decizia 1/2020 ICCJ", 
+            "arg": "Expertul a ignorat dispoziția de a face repoziționarea conform Planului Parcelar. Refuzul constituie o sfidare a mandatului judiciar.",
+            "q": "De ce expertul nu a prezentat varianta tehnică ce transpune riguros Planul Parcelar pe teren?"
         },
         {
             "id": "MAR-19", 
             "sit": "4. MĂRIREA NELEGALĂ A SUPRAFEȚEI VECINULUI CU 19%", 
             "leg": "Legea 18/1991 / Art. 583 Cod Civil", 
             "iccj": "Principiul intangibilității Titlului L.18", 
-            "arg": "Vecinul deține un excedent de 19% fără un titlu de proprietate modificat legal. Expertul nu are autoritatea să 'legalizeze' o ocupare de fapt care încalcă actele de achiziție inițiale.",
-            "q": "Să indice expertul temeiul legal prin care a validat o suprafață cu 19% mai mare pentru vecin, ignorând dimensiunile din Titlul validat?"
+            "arg": "Vecinul deține un excedent de 19% fără titlu modificat legal. Expertul nu poate 'legaliza' o ocupare de fapt.",
+            "q": "Să indice expertul temeiul legal prin care a validat o suprafață cu 19% mai mare pentru vecin?"
         },
         {
             "id": "DIM-1", 
             "sit": "5. DIMINUAREA NELEGALĂ A SUPRAFEȚEI DIN TITLU", 
-            "leg": "Art. 44 Constituție / Decizia 66/2020 ICCJ", 
-            "arg": "Expertul nu poate diminua suprafața din Titlu pentru a compensa erori. Titlul de proprietate validat administrativ este intangibil și trebuie respectat în dimensiunile sale reale.",
-            "q": "De ce s-a procedat la diminuarea suprafeței mele din Titlu, deși terenul există real în tarlă conform dimensiunilor validate?"
+            "leg": "Art. 44 Constituție", 
+            "iccj": "Decizia 66/2020 ICCJ", 
+            "arg": "Expertul nu poate diminua suprafața din Titlu pentru a compensa erori. Titlul validat administrativ este intangibil.",
+            "q": "De ce s-a procedat la diminuarea suprafeței mele din Titlu, deși terenul există real în tarlă?"
         },
         {
             "id": "TRANS-1", 
             "sit": "6. TRANSLATAREA PARCELEI ȘI EFECTUL DE DOMINO", 
             "leg": "Art. 1200 Cod Civil / RIL 24/2024", 
-            "arg": "Repoziționarea prin translatare ignoră Planul Parcelar și creează suprapuneri peste terți deja întabulați, încălcând certitudinea circuitului civil.",
-            "q": "Cum justifică expertul varianta care 'împinge' parcela mea peste vecini deja întabulați, ignorând Planul Parcelar?"
+            "arg": "Repoziționarea prin translatare ignoră Planul Parcelar și creează suprapuneri peste terți deja întabulați.",
+            "q": "Cum justifică expertul varianta care 'împinge' parcela mea peste vecini deja întabulați?"
         },
         {
             "id": "PROC-1", 
             "sit": "7. NERESPECTAREA COTELOR DIN FIȘA DE CALCUL L.18", 
             "leg": "HG 890/2005 / Art. 27 L.18/1991", 
             "iccj": "Securitatea Raporturilor Juridice", 
-            "arg": "Dimensiunile laturilor din documentele premergătoare sunt obligatorii. Expertul nu poate modifica aceste cote validate administrativ prin procedura specială.",
-            "q": "De ce expertul a ignorat dimensiunile laturilor din Fișa de Calcul care a fundamentat Titlul și Procesul Verbal de Punere în Posesie?"
+            "arg": "Dimensiunile laturilor din Fișa de Calcul sunt obligatorii. Expertul nu poate modifica aceste cote validate administrativ.",
+            "q": "De ce expertul a ignorat dimensiunile laturilor din Fișa de Calcul care a fundamentat Titlul?"
+        },
+        {
+            "id": "PARCELAR-ICCJ", 
+            "sit": "8. OBLIGATIVITATEA RESPECTĂRII PLANULUI PARCELAR VALIDAT", 
+            "leg": "Legea 18/1991 / HG 890/2005", 
+            "iccj": "DECIZIA 66/2020 ÎCCJ / RIL 24/2024", 
+            "arg": "Conform ÎCCJ, Planul Parcelar este documentul obligatoriu care fundamentează Titlul. Expertul este OBLIGAT să respecte geometria tarlalei validate administrativ, orice 'creație' tehnică proprie fiind lovită de nulitate.",
+            "q": "Având în vedere Decizia 66/2020 a ÎCCJ, să precizeze expertul de ce a ales să ignore configurația tarlalei stabilită prin Planul Parcelar validat?"
         }
     ]
 
 st.title("⚖️ Expert Jurisprudență - GeorgeAOH")
-st.markdown("### Nucleu: Rectificare (Art. 907 C. Civ.) & Revendicare (S. 832/2000)")
+st.markdown("### Nucleu: Rectificare, Revendicare și Plan Parcelar (Decizia 66/2020 ÎCCJ)")
 
-# Filtrare
+# Interfață
 search_query = st.text_input("🔍 Filtrează spețe:", "")
 df = pd.DataFrame(st.session_state.data)
 filtered_df = df[df.apply(lambda row: search_query.lower() in row.astype(str).str.lower().values, axis=1)] if search_query else df
@@ -96,13 +100,12 @@ for index, row in filtered_df.iterrows():
                 selectii.append({**row.to_dict(), "obs": obs})
         st.divider()
 
-# Word Function
+# Funcție Word
 def create_word(data_selected, d_nr, d_inst):
     doc = Document()
     p_antet = doc.add_paragraph()
     run_antet = p_antet.add_run(f"CĂTRE: {d_inst}\nDOSAR NR: {d_nr}")
-    run_antet.bold = True
-    run_antet.font.size = Pt(12)
+    run_antet.bold, run_antet.font.size = True, Pt(12)
     p_antet.alignment = 2
     doc.add_heading('OBIECTIUNI LA RAPORTUL DE EXPERTIZĂ', 0).alignment = 1
 
