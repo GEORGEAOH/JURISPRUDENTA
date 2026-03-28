@@ -16,7 +16,7 @@ def reset_form():
         del st.session_state[key]
     st.rerun()
 
-# 3. Baza de Date Completă (Toate cele 8 puncte)
+# 3. Baza de Date Completă (Toate cele 8 puncte VERIFICATE)
 data_points = [
     {
         "id": "RECT-907", 
@@ -83,7 +83,7 @@ data_points = [
     }
 ]
 
-# 4. Bara Laterală (Fixă)
+# 4. Bara Laterală
 with st.sidebar:
     st.header("📝 Detalii Memoriu")
     nr_dosar = st.text_input("Dosar nr:", value="5975/221/2018", key="dosar_input")
@@ -99,11 +99,12 @@ search_q = st.text_input("🔍 Filtrează spețe:", "")
 selected_list = []
 
 for item in data_points:
-    # Filtrarea funcționează pe lista completă
-    if search_q.lower() in item['sit'].lower() or search_q == "":
+    # Verificăm dacă textul căutat se află în situație sau în baza legală
+    if search_q.lower() in item['sit'].lower() or search_q.lower() in item['leg'].lower() or search_q == "":
         with st.container():
             col_check, col_info = st.columns([0.1, 0.9])
             with col_check:
+                # Folosim key unic bazat pe id-ul item-ului
                 is_selected = st.checkbox("SEL", key=f"sel_{item['id']}")
             with col_info:
                 st.markdown(f"### {item['sit']}")
@@ -111,7 +112,10 @@ for item in data_points:
                 st.info(f"💡 **Argument:** {item['arg']}")
                 if is_selected:
                     obs_val = st.text_area("✍️ Note specifice:", key=f"obs_{item['id']}", placeholder="Detalii 932 mp...")
-                    selected_list.append({**item, "note": obs_val})
+                    # Adăugăm în listă obiectul cu tot cu note
+                    item_with_notes = item.copy()
+                    item_with_notes['note'] = obs_val
+                    selected_list.append(item_with_notes)
             st.divider()
 
 # 6. Funcție Word (Bold & Subliniat)
@@ -134,7 +138,7 @@ if btn_generate:
             arg_p.add_run("ARGUMENT JURIDIC: ").bold = True
             arg_p.add_run(s['arg'])
 
-            if s['note']:
+            if s.get('note'):
                 obs_p = doc.add_paragraph()
                 obs_p.add_run(f"SITUAȚIA DE FAPT: {s['note']}").bold = True
 
