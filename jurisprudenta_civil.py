@@ -16,7 +16,7 @@ def reset_form():
         del st.session_state[key]
     st.rerun()
 
-# 3. Baza de Date Completă (Toate cele 8 puncte VERIFICATE)
+# 3. Baza de Date Completă (Toate cele 8 puncte VERIFICATE MANUAL)
 data_points = [
     {
         "id": "RECT-907", 
@@ -31,8 +31,8 @@ data_points = [
         "sit": "2. PRIORITATEA REVENDICĂRII FAȚĂ DE GRĂNIȚUIRE (COMBATERE)", 
         "leg": "Art. 560-563 C. Civ. / Decizia 433/2006", 
         "iccj": "Jurisprudență Constantă (Decizia 433/2006)", 
-        "arg": "Conform jurisprudenței constante (ex. Decizia 433/2006), o acțiune în grănițuire ulterioară NU are caracter constitutiv de drepturi și nu poate invalida o hotărâre în revendicare a dreptului de proprietate intrată în puterea lucrului judecat (S. 832/2000).", 
-        "q": "Cum poate expertul să valideze o grănițuire care încalcă o sentință de revendicare irevocabilă, ignorând faptul că grănițuirea nu creează drepturi noi?"
+        "arg": "Conform jurisprudenței constante (ex. Decizia 433/2006), o acțiune în grănițuire ulterioară NU are caracter constitutiv de drepturi și nu poate invalida o hotărâre în revendicare (S. 832/2000).", 
+        "q": "Cum poate expertul să valideze o grănițuire care încalcă o sentință de revendicare irevocabilă?"
     },
     {
         "id": "OBJ-1", 
@@ -54,6 +54,7 @@ data_points = [
         "id": "DIM-1", 
         "sit": "5. DIMINUAREA NELEGALĂ A SUPRAFEȚEI DIN TITLU", 
         "leg": "Art. 44 Constituție / Decizia 66/2020 ICCJ", 
+        "iccj": "Decizia 66/2020 ICCJ", 
         "arg": "Expertul nu poate diminua suprafața din Titlu pentru a compensa erori tehnice. Titlul validat administrativ este intangibil.", 
         "q": "De ce s-a procedat la diminuarea suprafeței mele din Titlu, deși terenul există real în tarlă?"
     },
@@ -99,26 +100,36 @@ search_q = st.text_input("🔍 Filtrează spețe:", "")
 selected_list = []
 
 for item in data_points:
-    # Verificăm dacă textul căutat se află în situație sau în baza legală
-    if search_q.lower() in item['sit'].lower() or search_q.lower() in item['leg'].lower() or search_q == "":
+    # Filtrare simplă
+    show_item = False
+    if search_q == "":
+        show_item = True
+    elif search_q.lower() in item['sit'].lower() or search_q.lower() in item['leg'].lower():
+        show_item = True
+        
+    if show_item:
         with st.container():
             col_check, col_info = st.columns([0.1, 0.9])
             with col_check:
-                # Folosim key unic bazat pe id-ul item-ului
                 is_selected = st.checkbox("SEL", key=f"sel_{item['id']}")
             with col_info:
                 st.markdown(f"### {item['sit']}")
                 st.write(f"📖 **Temei:** {item['leg']} | 🏛️ **ICCJ:** {item['iccj']}")
                 st.info(f"💡 **Argument:** {item['arg']}")
                 if is_selected:
-                    obs_val = st.text_area("✍️ Note specifice:", key=f"obs_{item['id']}", placeholder="Detalii 932 mp...")
-                    # Adăugăm în listă obiectul cu tot cu note
-                    item_with_notes = item.copy()
-                    item_with_notes['note'] = obs_val
-                    selected_list.append(item_with_notes)
+                    obs_val = st.text_area("✍️ Note specifice:", key=f"obs_{item['id']}", placeholder="Detalii speță...")
+                    # Salvăm selecția într-un mod sigur
+                    selected_list.append({
+                        "sit": item['sit'],
+                        "leg": item['leg'],
+                        "iccj": item['iccj'],
+                        "arg": item['arg'],
+                        "q": item['q'],
+                        "note": obs_val
+                    })
             st.divider()
 
-# 6. Funcție Word (Bold & Subliniat)
+# 6. Funcție Word
 if btn_generate:
     if selected_list:
         doc = Document()
@@ -138,7 +149,7 @@ if btn_generate:
             arg_p.add_run("ARGUMENT JURIDIC: ").bold = True
             arg_p.add_run(s['arg'])
 
-            if s.get('note'):
+            if s['note']:
                 obs_p = doc.add_paragraph()
                 obs_p.add_run(f"SITUAȚIA DE FAPT: {s['note']}").bold = True
 
