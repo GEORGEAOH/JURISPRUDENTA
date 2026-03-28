@@ -29,8 +29,8 @@ data_points = [
     {
         "id": "GRAN-REV", 
         "sit": "2. PRIORITATEA REVENDICĂRII FAȚĂ DE GRĂNIȚUIRE (COMBATERE)", 
-        "leg": "Art. 560-563 C. Civ. / Decizia 433/2006", 
-        "iccj": "Jurisprudență Constantă (Decizia 433/2006)", 
+        "leg": "Art. 560-563 C. Civ. / Decizia ÎCCJ nr. 433/2006", 
+        "iccj": "Jurisprudență Constantă (Decizia ÎCCJ nr. 433/2006)", 
         "arg": "Conform jurisprudenței constante (ex. Decizia 433/2006), o acțiune în grănițuire ulterioară NU are caracter constitutiv de drepturi și nu poate invalida o hotărâre în revendicare (S. 832/2000).", 
         "q": "Cum poate expertul să valideze o grănițuire care încalcă o sentință de revendicare irevocabilă?"
     },
