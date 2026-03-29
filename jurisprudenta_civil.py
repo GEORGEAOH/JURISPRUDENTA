@@ -8,108 +8,99 @@ import datetime
 # 1. Configurare Pagină
 st.set_page_config(page_title="Expert Jurisprudență GeorgeAOH", layout="wide")
 
-# 2. Argumente "De Fier" pentru Termenul din 14.04.2026
-argumente_fundamentale = [
-    {
-        "id": "DN7_FIX",
-        "sit": "1. FIXAREA LIMITEI LA DN7 (PARCELA 1)",
-        "leg": "Art. 27 Legea 18/1991 / Plan Parcelar Validat",
-        "arg": "Parcela nr. 1 se învecinează cu DN7, fiind un punct fix de hotar. Plusul de 49 mp măsurat de expert în zona primelor 6 parcele demonstrează că există suficient teren pentru respectarea tuturor Titlurilor.",
-        "q": "Dacă ați măsurat un excedent de 49 mp în teren față de acte, de ce propuneți diminuarea suprafețelor (Top 1, 5, 6/1) și translatarea Top 3 și 4, în loc să respectați dimensiunile din Fișa de Calcul a Comisiei?"
-    },
-    {
-        "id": "RIL_53",
-        "sit": "2. PRIORITATEA REVENDICĂRII (RIL 53/2007)",
-        "leg": "Decizia RIL 53/2007 ÎCCJ / S. 832/2000",
-        "arg": "Grănițuirea vecinului (S. 1500/2001) nu poate înfrânge Revendicarea (S. 832/2000). Mărirea suprafeței pârâtului cu 19% este nelegală.",
-        "q": "Cum justificați validarea unei grănițuiri care și-a mărit suprafața cu 19% prin încălcarea autorității de lucru judecat a sentinței de revendicare?"
-    },
-    {
-        "id": "TRANSLATARE_TOP2",
-        "sit": "3. TRANSLATARE NELEGALĂ PESTE TOP 2",
-        "leg": "Art. 1200 C. Civ. / Intervenția vecinilor în Apel",
-        "arg": "Translatarea parcelelor mele (Top 3, 4) peste parcela Top 2 a provocat intervenția vecinilor în apel. Această manevră tehnică încalcă stabilitatea întregii tarlale.",
-        "q": "De ce ați creat o nouă suprapunere peste intervenienți (Top 2), ignorând geometria Tarlalei 1 stabilită prin Planul Parcelar?"
-    }
+# 2. Baza de date pentru funcția de Căutare AI (Sidebar)
+biblioteca_ai = {
+    "plan parcelar": "Decizia 27/2022 ÎCCJ: Planul Parcelar este act de autoritate. Expertul NU îl poate modifica sau diminua suprafețele din Titlu.",
+    "revendicare": "Decizia RIL 53/2007: Revendicarea (S. 832/2000) are prioritate față de Grănițuirea (S. 1500/2001). Grănițuirea nu creează proprietate.",
+    "dn7": "Limita DN7 este punct FIX de hotar. Excedentul de 49 mp măsurat în teren trebuie să asigure integritatea tuturor Titlurilor din zonă.",
+    "49 mp": "Excedentul de 49 mp demonstrează că nu există 'lipsă de teren'. Diminuarea suprafețelor este deci un abuz tehnic.",
+    "translatare": "Translatarea peste vecini (Top 2) încalcă stabilitatea tarlalei și a generat intervenția terților în apel.",
+    "amenda": "Art. 187 C.pc.: Permite amendarea expertului pentru nerespectarea mandatului (Obiectiv nr. 1)."
+}
+
+# 3. Cele 8 Bife Juridice (Actualizate)
+data_points = [
+    {"id": "RIL-53", "sit": "1. PRIORITATEA REVENDICĂRII (RIL 53/2007)", "leg": "Decizia RIL 53/2007 / S. 832/2000", "arg": "Grănițuirea pârâtului nu poate înfrânge Revendicarea mea irevocabilă.", "q": "Cum justificați prioritizarea grănițuirii în fața revendicării?"},
+    {"id": "DEC-27", "sit": "2. INTANGIBILITATEA PLANULUI PARCELAR", "leg": "Decizia 27/2022 ÎCCJ / Art. 27 L. 18", "arg": "Expertul nu poate diminua suprafețele din Titluri pe cale incidentală.", "q": "În ce bază legală ați diminuat suprafețele din Titluri?"},
+    {"id": "DN7-49", "sit": "3. LIMITA DN7 ȘI EXCEDENTUL DE 49 MP", "leg": "Realitatea Terenului / Proba Tehnică", "arg": "Există excedent de teren în zonă, deci diminuarea este nejustificată.", "q": "Unde se regăsește faptic excedentul de 49 mp măsurat de dvs.?"},
+    {"id": "TRANS", "sit": "4. TRANSLATARE NELEGALĂ PESTE TOP 2", "leg": "Intervenția Vecinilor / Art. 1200 C.civ.", "arg": "Mutarea parcelelor peste vecini încalcă stabilitatea tarlalei.", "q": "De ce ați creat o nouă suprapunere peste intervenienți?"},
+    {"id": "DIM-4", "sit": "5. DIMINUAREA TOP 4 (932 MP SUPRAPUNERE)", "leg": "Art. 44 Constituție / S. 832/2000", "arg": "Top 4 are 2131 mp și conține revendicarea; diminuarea este nelegală.", "q": "De ce diminuați Top 4 dacă în teren există excedent?"},
+    {"id": "MARIRE-19", "sit": "6. MĂRIREA VECINULUI CU 19%", "leg": "Frauda la Lege / Art. 27 L. 18", "arg": "Expertul 'legalizează' ocuparea nelegală a pârâtului.", "q": "Care e baza legală pentru plusul de 19% al pârâtului?"},
+    {"id": "CALCUL", "sit": "7. CRITICA METODEI DE CALCUL (L x h)", "leg": "Tabelul de Calcul L. 18 / Geometrie", "arg": "Expertul ignoră perpendicularitatea (înălțimea) din fișa de calcul.", "q": "De ce ignorați metoda de calcul care a fundamentat Titlurile?"},
+    {"id": "AMENDA", "sit": "8. SOLICITARE AMENDĂ (ART. 187 C.PC.)", "leg": "Art. 187 C.pc. / Nerespectare Mandat", "arg": "Expertul refuză sistematic Obiectivul nr. 1 stabilit de instanță.", "q": "Solicităm amendarea expertului pentru sfidarea mandatului."}
 ]
 
-# 3. Sidebar (Bara Laterală)
+# 4. Bara Laterală
 with st.sidebar:
     st.header("📝 Detalii Dosar")
     nr_dosar = st.text_input("Dosar nr:", value="5975/221/2018")
-    instanta = st.text_input("Către:", value="Tribunalul Hunedoara")
     termen_jud = st.date_input("📅 Termen:", value=datetime.date(2026, 4, 14))
     
     st.divider()
-    st.subheader("🔎 Căutare AI Jurisprudență")
-    ai_q = st.text_input("Întreabă AI (ex: 'plan parcelar'):")
-    if "plan" in ai_q.lower():
-        st.success("Argument: Decizia 27/2022 ÎCCJ obligă expertul să respecte geometria tarlalei validate.")
+    st.subheader("🔎 CĂUTARE JURISPRUDENȚĂ AI")
+    query_ai = st.text_input("Caută (ex: dn7, 49 mp, plan):").lower()
+    if query_ai:
+        found = False
+        for k, v in biblioteca_ai.items():
+            if k in query_ai:
+                st.success(f"**Rezultat:** {v}")
+                found = True
+        if not found: st.warning("Nu am găsit. Încearcă 'dn7' sau 'plan'.")
 
     st.divider()
-    btn_gen = st.button("🚀 GENEREAZĂ OBIECȚIUNI WORD", use_container_width=True)
+    btn_word = st.button("🚀 GENEREAZĂ WORD")
 
-# 4. Corp Principal
+# 5. Corp Principal
 st.title("⚖️ Expert Jurisprudență GeorgeAOH")
-st.subheader(f"Obiecțiuni Răspuns nr. 6 | Simeria Sântandrei | Termen: {termen_jud.strftime('%d.%m.%Y')}")
 
-# Tabel Comparativ Editabil
-st.markdown("### 📊 Analiză Suprafață: Titlu vs. Propunere Expert")
+# Tabel Editabil
+st.subheader("📊 Situația celor 6 Parcele")
 df_init = pd.DataFrame({
-    "Nr. Parcela": ["Top 1 (Lângă DN7)", "Top 2 (Intervenient)", "Top 3 (Reclamant)", "Top 4 (932mp suprap.)", "Top 5", "Top 6/1"],
-    "Suprafata Titlu (mp)": [0.0, 0.0, 0.0, 2131.0, 0.0, 0.0],
-    "Suprafata Expert (mp)": [0.0, 0.0, 0.0, 2142.0, 0.0, 0.0],
-    "Observații": ["DN7 - Punct Fix", "Translatare Nelegală", "Diminuată", "Mărită artificial (+11mp)", "Diminuată", "Diminuată"]
+    "Nr. Parcela": ["Top 1", "Top 2", "Top 3", "Top 4 (2131mp)", "Top 5", "Top 6/1"],
+    "Titlu (mp)": [0.0, 0.0, 0.0, 2131.0, 0.0, 0.0],
+    "Expert (mp)": [0.0, 0.0, 0.0, 2082.0, 0.0, 0.0]
 })
 edited_df = st.data_editor(df_init, use_container_width=True)
 
 st.divider()
-st.subheader("🔍 Selectează argumentele pentru Nota de Ședință:")
-
+st.subheader("🔍 Selectează Argumentele (Bife):")
 selected_points = []
-for item in argumente_fundamentale:
+for item in data_points:
     if st.checkbox(item['sit'], key=item['id']):
         selected_points.append(item)
 
-# 5. Generare Document Word
-if btn_gen:
+# 6. Generare Word (Corectată)
+if btn_word:
     if not selected_points:
-        st.error("⚠️ Selectează cel puțin un argument!")
+        st.error("⚠️ Selectează cel puțin o bifă!")
     else:
         doc = Document()
-        p = doc.add_paragraph()
-        p.add_run(f"CĂTRE: {instanta}\nDOSAR NR: {nr_dosar}\nTERMEN: {termen_jud.strftime('%d.%m.%Y')}").bold = True
-        p.alignment = 2
+        # Antet
+        antet = doc.add_paragraph()
+        antet.add_run(f"DOSAR NR: {nr_dosar}\nTERMEN: {termen_jud.strftime('%d.%m.%Y')}").bold = True
+        antet.alignment = 2
+
         doc.add_heading('OBIECTIUNI LA RĂSPUNSUL LA OBIECTIUNI NR. 6', 0).alignment = 1
 
-        # Secțiunea Specială: DN7 și excedentul de 49mp
-        doc.add_heading('1. ANALIZA TEHNICĂ: LIMITA DN7 ȘI EXCEDENTUL DE 49 MP', level=1)
-        doc.add_paragraph(
-            "Expertul omite un fapt esențial: parcela nr. 1 se învecinează cu drumul național DN7, constituind un punct fix de hotar. "
-            "Prin propriile măsurători, expertul a identificat un EXCEDENT de 49 mp în zona primelor 6 parcele. "
-            "În aceste condiții, diminuarea suprafețelor din Titlu și translatarea parcelelor peste Top 2 (care a generat intervenția vecinilor în apel) "
-            "reprezintă o eroare metodologică voită, menită să favorizeze pârâtul în detrimentul realității juridice a Planului Parcelar."
-        )
+        # Tabel
+        doc.add_heading('SITUAȚIA COMPARATIVĂ A SUPRAFEȚELOR', level=1)
+        table = doc.add_table(rows=1, cols=3)
+        table.style = 'Table Grid'
+        h_cells = table.rows[0].cells
+        h_cells[0].text, h_cells[1].text, h_cells[2].text = 'Nr. Parcela', 'Titlu (mp)', 'Expert (mp)'
 
-        # Argumentele selectate
+        for _, row in edited_df.iterrows():
+            r_cells = table.add_row().cells
+            r_cells[0].text, r_cells[1].text, r_cells[2].text = str(row[0]), str(row[1]), str(row[2])
+
+        # Argumente
         for s in selected_points:
             doc.add_heading(s['sit'], level=2)
             doc.add_paragraph(f"Temei: {s['leg']}").italic = True
-            doc.add_paragraph(f"Argument juridic: {s['arg']}")
-            doc.add_paragraph(f"ÎNTREBARE PENTRU EXPERT: {s['q']}").bold = True
-
-        # Tabelul în Word
-        doc.add_heading('SITUAȚIA COMPARATIVĂ A SUPRAFEȚELOR', level=1)
-        table = doc.add_table(rows=1, cols=3)
-        table.rows.cells[0].text = 'Nr. Parcela'
-        table.rows.cells[1].text = 'Suprafață Titlu (mp)'
-        table.rows.cells[2].text = 'Suprafață Expert (mp)'
-        for _, row in edited_df.iterrows():
-            row_cells = table.add_row().cells
-            row_cells.text, row_cells.text, row_cells.text = str(row[0]), str(row[1]), str(row[2])
-
-        doc.add_paragraph("\nSOLICITĂM: Respingerea raportului, refacerea acestuia fără translatări și amendarea expertului (Art. 187 C.pc.).")
+            doc.add_paragraph(f"Argument: {s['arg']}")
+            p_q = doc.add_paragraph()
+            p_q.add_run(f"SOLICITARE/ÎNTREBARE: {s['q']}").bold = True
 
         bio = io.BytesIO(); doc.save(bio); bio.seek(0)
-        st.sidebar.download_button("📥 DESCARCĂ MEMORIUL", bio, f"Obiectiuni_GeorgeAOH_Final.docx")
-        st.success("✅ Documentul a fost generat cu argumentul DN7 și excedentul de 49mp!")
+        st.sidebar.download_button("📥 DESCARCĂ DOCUMENTUL", bio, "Obiectiuni_Final.docx", use_container_width=True)
+        st.success("✅ Document pregătit în sidebar!")
