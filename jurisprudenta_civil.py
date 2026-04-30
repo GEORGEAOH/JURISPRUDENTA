@@ -91,7 +91,7 @@ if btn_word:
 
         for _, row in edited_df.iterrows():
             r_cells = table.add_row().cells
-            r_cells[0].text, r_cells[1].text, r_cells[2].text = str(row[0]), str(row[1]), str(row[2])
+            r_cells[0].text, r_cells[1].text, r_cells[2].text = str(row.iloc[0]), str(row.iloc[1]), str(row.iloc[2])
 
         # Argumente
         for s in selected_points:
